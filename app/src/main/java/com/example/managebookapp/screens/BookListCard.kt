@@ -16,26 +16,50 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.managebookapp.AppViewModelProvider
 import com.example.managebookapp.Routes
 import com.example.managebookapp.components.BookCard
 import com.example.managebookapp.data.bookList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @ExperimentalMaterial3Api
 @Composable
-fun BookListCard(navController: NavHostController) {
+fun BookListCard(
+    navController: NavHostController,
+    viewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val coroutineScope = rememberCoroutineScope()
+//    var itemsState = viewModel.getAllSignedUser().collectAsState(initial = emptyList())
+//    var itemsModel = itemsState.value[0];
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("Welcome ") },
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.navigate(Routes.Login.route) }
+                        onClick = {
+                            coroutineScope.launch {
+                                withContext(Dispatchers.IO) {
+                                    var logged = viewModel.logout()
+                                    println("setelah logged")
+                                }
+
+                            }
+                            println("otw to login page")
+                            navController.navigate(Routes.Login.route)
+                        }
 
                     ) {
                         Icon(Icons.Filled.ExitToApp, contentDescription = "logout icon")
@@ -47,9 +71,15 @@ fun BookListCard(navController: NavHostController) {
     ) { param ->
         param.toString()
         Column(modifier = Modifier.padding(top = 60.dp)) {
-            Text(text = "Book List", textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 28.sp, modifier = Modifier
-                .padding(bottom = 30.dp)
-                .fillMaxWidth())
+            Text(
+                text = "Book List",
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 28.sp,
+                modifier = Modifier
+                    .padding(bottom = 30.dp)
+                    .fillMaxWidth()
+            )
 
             LazyVerticalGrid(
 

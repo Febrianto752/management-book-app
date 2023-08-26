@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.managebookapp.screens.BookDetail
 import com.example.managebookapp.screens.BookListCard
 import com.example.managebookapp.screens.LoginScreen
+import com.example.managebookapp.screens.Registration
 import com.example.managebookapp.ui.theme.ManageBookAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,6 +59,10 @@ fun MainScreen() {
 
         composable(Routes.Login.route) {
             LoginScreen(navController = navController)
+        }
+
+        composable(Routes.Register.route) {
+            Registration(navController = navController)
         }
 
         composable(Routes.Home.route) {
